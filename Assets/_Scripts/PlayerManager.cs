@@ -8,19 +8,24 @@ public class PlayerManager : MonoBehaviour {
     //in the player game object, and it makes the executive decisions with the information provided by the others
 
     //All the other player related classes which we will connect through the editor
-    public PlayerCollisions playerCollisions;
-    public PlayerInput playerInput;
-    public MovementController movementController;
-    public HasHealth hasHealth;
-    public HasStamina hasStamina;
-    public PlayerAnimation playerAnimation;
+    [SerializeField] private PlayerCollisions playerCollisions;
+    [SerializeField] private PlayerInput playerInput;
+    [SerializeField] private MovementController movementController;
+    [SerializeField] private HasHealth hasHealth;
+    [SerializeField] private HasStamina hasStamina;
+    [SerializeField] private PlayerAnimation playerAnimation;
     
     //All the status variables that the manager needs to keep track of whether the player:
-    private bool grounded;  //is on the ground
-    private bool recovery;  //is in the invincibility/recovery frames
-    private bool canAct;    //can perform a move (jump, roll, slide, etc.)  
-    private bool canMove;   //can move, be it walk, sprint, or while in the air
-    private bool alive;     //self explanatory
+    private bool grounded;      //is on the ground
+    private bool recovery;      //is in the invincibility/recovery frames
+    private bool canAct;        //can perform a move (jump, roll, slide, etc.)  
+    private bool canMove;       //can move, be it walk, sprint, or while in the air
+    private bool alive;         //self explanatory
+    private bool isSprinting;   //is currently sprinting
+    
+    //Balance control variables
+    [SerializeField][Range(5.0f, 20.0f)] private float walkSpeed;
+    [SerializeField][Range(5.0f, 20.0f)] private float sprintBoost;
     
     //Enum that gives a simple naming system for the messages the player manager will be receiving from the
     //modules. The Names start with the name of the module it belongs to, underscore and the name of the
@@ -30,7 +35,7 @@ public class PlayerManager : MonoBehaviour {
         INPUT_SPRINT,
         INPUT_JUMP,
         INPUT_ROLL,
-        INPUT_SLIDE,
+        INPUT_INTERACT,
         HEALTH_0HP,
         COLLISIONS_DAMAGE
     }
@@ -43,8 +48,8 @@ public class PlayerManager : MonoBehaviour {
             hasHealth == null ||
             hasStamina == null ||
             playerAnimation == null) {
-            //---PLACEHOLDER
-            ; //we need to send an error message here cause editor error
+            
+            Debug.Log("Module component not set through editor in: PlayerManager.cs"); //PLACEHOLDER!!
         }
     }
     
@@ -63,6 +68,9 @@ public class PlayerManager : MonoBehaviour {
                 break;
             case Messages.INPUT_ROLL:
                 Debug.Log("Roll"); //PLACEHOLDER!!
+                break;
+            case Messages.INPUT_INTERACT:
+                Debug.Log("Interact"); //PLACEHOLDER!!
                 break;
             
             //health module messages
@@ -86,10 +94,10 @@ public class PlayerManager : MonoBehaviour {
             //Input module messages
             //################################
             case Messages.INPUT_WALK:
-                Debug.Log("Walk"); //PLACEHOLDER!!
+                movementController.Move(direction, 100 * walkSpeed);
                 break;
             case Messages.INPUT_SPRINT:
-                Debug.Log("Sprint"); //PLACEHOLDER!!
+                movementController.Move(direction, 100 * (walkSpeed + sprintBoost));
                 break;
         }
     }
