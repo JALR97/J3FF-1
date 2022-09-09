@@ -111,7 +111,42 @@ MonoBehaviour:
   hasStamina: {fileID: 1441730664047948054}
   playerAnimation: {fileID: 1441730664047948052}
   walkSpeed: 8
-  sprintBoost: 5
+  sprintBoost: 6
+  rollTime: 0.3
+  rollSpeed: 20
+  rollCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.15114157
+      value: 0.9688646
+      inSlope: 0.18647671
+      outSlope: 0.18647671
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.20051229
+    - serializedVersion: 3
+      time: 0.5530347
+      value: 0.98408324
+      inSlope: -0.09027035
+      outSlope: -0.09027035
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.26347184
+    - serializedVersion: 3
+      time: 1.1433481
+      value: 0.93666995
+      inSlope: -0.30856252
+      outSlope: -0.30856252
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.10909564
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &1441730664047948055
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -30,11 +30,15 @@ public class PlayerInput : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.LeftControl) && direction.magnitude > 0) {
             UpdateDirection();
             playerManager.SendMessage(PlayerManager.Messages.INPUT_ROLL, direction);
-        } //---Jump input 
-        else if (Input.GetKeyDown(KeyCode.Space)) {
+        } 
+        
+        //---Jump input 
+        if (Input.GetKeyDown(KeyCode.Space)) {
             playerManager.SendMessage(PlayerManager.Messages.INPUT_JUMP);
-        } //---Interact input
-        else if (Input.GetKeyDown(KeyCode.E)) {
+        } 
+        
+        //---Interact input
+        if (Input.GetKeyDown(KeyCode.E)) {
             playerManager.SendMessage(PlayerManager.Messages.INPUT_INTERACT);
         }
     }

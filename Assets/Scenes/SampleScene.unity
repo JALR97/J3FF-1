@@ -258,6 +258,74 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[1].time
+      value: 0.20475563
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[0].value
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[1].value
+      value: 0.98664975
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[2].value
+      value: 0.9469866
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[0].inSlope
+      value: 1.6910329
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[1].inSlope
+      value: 0.11294784
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[2].inSlope
+      value: -0.12500708
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[0].outSlope
+      value: 1.6910329
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[1].inWeight
+      value: 0.5365466
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[1].outSlope
+      value: 0.11294784
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[2].inWeight
+      value: 0.2421288
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[2].outSlope
+      value: -0.12500708
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[0].outWeight
+      value: 0.15326266
+      objectReference: {fileID: 0}
+    - target: {fileID: 1441730664047948049, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
+      propertyPath: rollCurve.m_Curve.Array.data[1].outWeight
+      value: 0.26236397
+      objectReference: {fileID: 0}
     - target: {fileID: 1441730664047948062, guid: 3e3ef0eb68585954daa193a1e4efd15b, type: 3}
       propertyPath: m_Name
       value: Player
