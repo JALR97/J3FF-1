@@ -18,11 +18,18 @@ public class MovementController : MonoBehaviour {
     
     //General self movement function
     public void Move(Vector2 direction, float Speed) {
-        rigidBody2D.velocity = direction * (Speed * Time.fixedDeltaTime);
+        rigidBody2D.velocity = direction * (Speed * Time.deltaTime);
     }
     
     //General rotation 
-    public void Rotate() {
-        
+    public void Rotate(Vector2 direction, float Speed) {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion qDest = Quaternion.Euler(new Vector3(0, 0, angle + 90));
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, qDest, 100 * Speed * Time.deltaTime); 
+    }
+    //Instant rotation overload
+    public void Rotate(Vector2 direction) {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle + 90));
     }
 }

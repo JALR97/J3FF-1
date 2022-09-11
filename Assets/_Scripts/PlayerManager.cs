@@ -14,25 +14,40 @@ public class PlayerManager : MonoBehaviour {
     [SerializeField] private HasHealth hasHealth;
     [SerializeField] private HasStamina hasStamina;
     [SerializeField] private PlayerAnimation playerAnimation;
+    [SerializeField] private AudioSource audioSource;
+    //Prototype changes:
+    [SerializeField] private AudioClip jump;
+    [SerializeField] private AudioClip roll;
+    [SerializeField] private AudioClip walk;
+    [SerializeField] private Collider2D thisCollider;
     
     //Constants
     private float GLOBAL_SPEED_MODIFIER = 100.0f;
     
     //All the status variables that the manager needs to keep track of whether the player:
-    private bool grounded;      //is on the ground
+    private bool grounded = true;       //is on the ground
     private bool recovery = false;      //is in the invincibility/recovery frames
-    private bool canAct = true;        //can perform a move (jump, roll, slide, etc.)  
-    private bool canMove = true;       //can move, be it walk, sprint, or while in the air
-    private bool alive;         //self explanatory
-    private bool isSprinting;   //is currently sprinting
-    private bool rolling;       //is currently rolling
+    private bool canAct = true;         //can perform a move (jump, roll, slide, etc.)  
+    private bool canMove = true;        //can move, be it walk, sprint, or while in the air
+    private bool alive;                 //self explanatory
+    private bool walking;               //is currently walking
+    private bool sprinting;             //is currently sprinting
+    private bool rolling;               //is currently rolling
     
     //Balance control variables
+    //Basic movement balance
     [SerializeField][Range(5.0f, 30.0f)] private float walkSpeed;
-    [SerializeField][Range(1.0f, 10.0f)] private float sprintBoost; //Added to walkSpeed when sprinting
+    [SerializeField][Range(1.0f, 10.0f)] private float sprintBoost;
+    [SerializeField][Range(0.0f, 3.0f)] private float walkSoundInterval;
+    [SerializeField][Range(0.0f, 20.0f)] private float walkRand; //redesign this implementation of steps sounds
+    private float timer = 0;
+    //Roll balance
     [SerializeField][Range(0.1f, 2.0f)] private float rollTime;
     [SerializeField][Range(10.0f, 40.0f)] private float rollSpeed;
     [SerializeField] AnimationCurve rollCurve;
+    //Jump balance
+    [SerializeField][Range(0.1f, 2.0f)] private float jumpTime;
+    [SerializeField] AnimationCurve jumpCurve;
     
     //Enum that gives a simple naming system for the messages the player manager will be receiving from the
     //modules. The Names start with the name of the module it belongs to, underscore and the name of the
@@ -71,7 +86,9 @@ public class PlayerManager : MonoBehaviour {
             //Input module messages
             //################################
             case Messages.INPUT_JUMP:
-                Debug.Log("Jump"); //PLACEHOLDER!!
+                if (canAct) {
+                    StartCoroutine(Jump());
+                }
                 break;
             
             case Messages.INPUT_INTERACT:
@@ -97,18 +114,38 @@ public class PlayerManager : MonoBehaviour {
         switch (messageCode) {
             //Input module messages
             //################################
+            case Messages.INPUT_SPRINT: //Sprint
+                if (canMove && grounded) {
+                    movementController.Move(direction, GLOBAL_SPEED_MODIFIER * (walkSpeed + sprintBoost));
+                    movementController.Rotate(direction, walkSpeed);
+                    //Needs redesign
+                    if (timer == 0) {
+                        PlayRand(walk, walkRand);
+                    }
+                    timer += Time.deltaTime * UnityEngine.Random.Range(1.0f - walkRand / 100.0f, 1.0f);
+                    if (timer >= walkSoundInterval / 1.5) {
+                        timer = 0.0f;
+                    }
+                }
+                else {
+                    goto case Messages.INPUT_WALK; //Intended fallthrough from sprint to walk
+                }
+                break;
             case Messages.INPUT_WALK: //Walk
                 if (canMove) {
                     movementController.Move(direction, GLOBAL_SPEED_MODIFIER * walkSpeed);
+                    movementController.Rotate(direction, walkSpeed);
+                    //Needs redesign
+                    if (timer == 0) {
+                        PlayRand(walk, walkRand);
+                    }
+                    timer += Time.deltaTime * UnityEngine.Random.Range(1.0f - walkRand / 100.0f, 1.0f);
+                    if (timer >= walkSoundInterval) {
+                        timer = 0.0f;
+                    }
                 }
                 break;
-            
-            case Messages.INPUT_SPRINT: //Sprint
-                if (canMove) {
-                    movementController.Move(direction, GLOBAL_SPEED_MODIFIER * (walkSpeed + sprintBoost));    
-                }
-                break;
-            
+
             case Messages.INPUT_ROLL: //Roll
                 if (canAct) {
                     StartCoroutine(Roll(direction));
@@ -127,9 +164,12 @@ public class PlayerManager : MonoBehaviour {
         canMove = false;
 
         //Collision change call
+        thisCollider.isTrigger = true;
         //--Placeholder-------------------
         
         //start animation
+        movementController.Rotate(direction);
+        Play(roll);
         //--Placeholder-------------------
         
         //Main movement loop and time increment check for the 
@@ -147,7 +187,6 @@ public class PlayerManager : MonoBehaviour {
             movementController.Move(direction, speedPercent * rollSpeed * GLOBAL_SPEED_MODIFIER); 
             
             time += Time.fixedDeltaTime;
-            Debug.Log("time : " + time);
             if (time >= rollTime) {                     //When the time is up we break the cycle
                 rolling = false;
             }
@@ -156,6 +195,7 @@ public class PlayerManager : MonoBehaviour {
             }
         }
         //Collision change call
+        thisCollider.isTrigger = false;
         //--Placeholder-------------------
 
         //recovery is checked here to make sure the loop wasn't stopped by the player getting damaged
@@ -168,4 +208,65 @@ public class PlayerManager : MonoBehaviour {
             canMove = true;
         }
     }
+    
+    //Jump implementation through the MovementController module
+    private IEnumerator Jump() {
+        //Setup to start the jump, like updating status and initializing variables
+        float time = 0;                                //Timer
+        Vector2 startingScale = transform.localScale;
+        grounded = false;
+        canAct = false;
+        
+        //Collision change call
+        thisCollider.isTrigger = true;
+        //--Placeholder-------------------
+        
+        //start animation
+        Play(jump);
+        //--Placeholder-------------------
+        
+        while (!grounded) {
+            var sizePercent = jumpCurve.Evaluate(time / jumpTime);
+            //The percentage obtained from the curve will be multiplied by
+            //the starting scale vector to then be able to modulate the size change animation 
+            //by the shape of the curve
+            transform.localScale = startingScale * sizePercent; 
+            
+            time += Time.deltaTime;
+            if (time >= jumpTime) {                     //When the time is up we break the cycle
+                grounded = true;
+            }
+            else {
+                yield return 0;  //if not, next cycle will come next frame
+            }
+        }
+        //we make sure it returns to its original scale
+        transform.localScale = startingScale;
+        canAct = true;
+        //Collision change call
+        thisCollider.isTrigger = false;
+        //--Placeholder-------------------
+
+        //recovery is checked here to make sure the loop wasn't stopped by the player getting damaged
+        //This way the status or animations set by the damage function won't be affected
+        // if (!recovery) { 
+        //     //Back to normal animation
+        //     //--Placeholder-------------------
+        // }
+    }
+    
+    //Temporal functions for single audio clip playing, this should be moved to the audio controller when
+    //it gets implemented outside the alpha prototype. Also randomizer function for walking sounds
+    void Play(AudioClip clip) {
+        // audioSource.volume = 1;
+        // audioSource.pitch = 1;
+        audioSource.PlayOneShot(clip);
+    }
+
+    void PlayRand(AudioClip clip, float percent) {
+        // audioSource.volume = UnityEngine.Random.Range(0.7f, 1.0f);
+        // audioSource.pitch = UnityEngine.Random.Range(0.75f, 1.25f);
+        audioSource.PlayOneShot(clip);
+    }
+
 }
