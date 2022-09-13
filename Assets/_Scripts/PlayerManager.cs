@@ -18,7 +18,7 @@ public class PlayerManager : MonoBehaviour {
     //Prototype changes:
     [SerializeField] private AudioClip jump;
     [SerializeField] private AudioClip roll;
-    [SerializeField] private AudioClip walk;
+    [SerializeField] private AudioClip[] walk;
     [SerializeField] private Collider2D thisCollider;
     
     //Constants
@@ -111,6 +111,8 @@ public class PlayerManager : MonoBehaviour {
     
     //This overload takes a 2D vector as an argument on top of the message code
     public void SendMessage(Enum messageCode, Vector2 direction) {
+        //temp
+        int i;
         switch (messageCode) {
             //Input module messages
             //################################
@@ -120,7 +122,10 @@ public class PlayerManager : MonoBehaviour {
                     movementController.Rotate(direction, walkSpeed);
                     //Needs redesign
                     if (timer == 0) {
-                        PlayRand(walk, walkRand);
+                        i = UnityEngine.Random.Range(0, walk.Length - 1);
+                        if (grounded) {
+                            PlayRand(walk[i], walkRand);
+                        }
                     }
                     timer += Time.deltaTime * UnityEngine.Random.Range(1.0f - walkRand / 100.0f, 1.0f);
                     if (timer >= walkSoundInterval / 1.5) {
@@ -137,7 +142,10 @@ public class PlayerManager : MonoBehaviour {
                     movementController.Rotate(direction, walkSpeed);
                     //Needs redesign
                     if (timer == 0) {
-                        PlayRand(walk, walkRand);
+                        i = UnityEngine.Random.Range(0, walk.Length - 1);
+                        if (grounded) {
+                            PlayRand(walk[i], walkRand);
+                        }
                     }
                     timer += Time.deltaTime * UnityEngine.Random.Range(1.0f - walkRand / 100.0f, 1.0f);
                     if (timer >= walkSoundInterval) {
@@ -258,14 +266,14 @@ public class PlayerManager : MonoBehaviour {
     //Temporal functions for single audio clip playing, this should be moved to the audio controller when
     //it gets implemented outside the alpha prototype. Also randomizer function for walking sounds
     void Play(AudioClip clip) {
-        // audioSource.volume = 1;
-        // audioSource.pitch = 1;
+        audioSource.volume = 1;
+        audioSource.pitch = 1;
         audioSource.PlayOneShot(clip);
     }
 
     void PlayRand(AudioClip clip, float percent) {
-        // audioSource.volume = UnityEngine.Random.Range(0.7f, 1.0f);
-        // audioSource.pitch = UnityEngine.Random.Range(0.75f, 1.25f);
+        audioSource.volume = UnityEngine.Random.Range(0.25f, 0.6f);
+        audioSource.pitch = UnityEngine.Random.Range(0.4f, 1.4f);
         audioSource.PlayOneShot(clip);
     }
 
