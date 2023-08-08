@@ -4,7 +4,9 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour {
     //Connection with the player manager for communication, and any other component it needs
     [SerializeField] private PlayerManager playerManager;
-
+    //Temp
+    [SerializeField] private PlayerAnimation playerAnimation;
+    
     //vector2 to handle movement direction from inputs 
     private Vector2 direction;
 
@@ -56,6 +58,9 @@ public class PlayerInput : MonoBehaviour {
                 //regular walk message
                 playerManager.SendMessage(PlayerManager.Messages.INPUT_WALK, direction);
             }
+        }
+        else {
+            playerAnimation.SwitchAnim("Idle");
         }
     }
 }

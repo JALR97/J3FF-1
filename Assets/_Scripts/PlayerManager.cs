@@ -76,7 +76,7 @@ public class PlayerManager : MonoBehaviour {
     }
     
     //The whole communication system between the modules and this class relies on this function
-    //it is public so that all the other modules can call it and send a messages to the manager,
+    //it is public so that all the other modules can call it and send a message to the manager,
     //at the same time we will make use of overloads to allow the addition of data with the message.
     public void SendMessage(Enum messageCode) {
         //The use of an enum for the message codes should help here to keep cases organized by their 
@@ -138,6 +138,8 @@ public class PlayerManager : MonoBehaviour {
                 break;
             case Messages.INPUT_WALK: //Walk
                 if (canMove) {
+                    //temp
+                    playerAnimation.SwitchAnim("Run");
                     movementController.Move(direction, GLOBAL_SPEED_MODIFIER * walkSpeed);
                     movementController.Rotate(direction, walkSpeed);
                     //Needs redesign

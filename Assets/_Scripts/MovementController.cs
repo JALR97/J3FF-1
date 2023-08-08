@@ -19,6 +19,7 @@ public class MovementController : MonoBehaviour {
     //General self movement function
     public void Move(Vector2 direction, float Speed) {
         rigidBody2D.velocity = direction * (Speed * Time.deltaTime);
+        
     }
     
     //General rotation 
