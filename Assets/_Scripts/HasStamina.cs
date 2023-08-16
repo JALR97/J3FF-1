@@ -1,18 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class HasStamina : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float maxStamina = 100f;
+    public float currentStamina;
+    public float recoveryRate = 10f; // Estamina recuperada por segundo
+    public bool isRecovering = false;
+
+
+    public float CurrentStamina
     {
-        
+        get { return currentStamina; }
+    }
+    private void Start()
+    {
+        currentStamina = maxStamina;
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool UseStamina(float amount)
     {
-        
+        if (currentStamina >= amount)
+        {
+            currentStamina -= amount;
+            isRecovering = false;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void StartRecovery()
+    {
+        isRecovering = true;
+    }
+
+    private void Update()
+    {
+        if (isRecovering)
+        {
+            currentStamina = Mathf.Min(maxStamina, currentStamina + recoveryRate * Time.deltaTime);
+        }
     }
 }
